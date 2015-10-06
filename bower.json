@@ -1,0 +1,20 @@
+{
+  "name": "sample_project",
+  "version": "0.0.0",
+  "authors": [
+    "Kyle Hill <kylehill@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "libs/",
+    "test",
+    "tests"
+  ],
+  "private": true,
+  "dependencies": {
+    "zepto": "~1.1.6"
+  }
+}
