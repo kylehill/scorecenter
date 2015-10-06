@@ -68,7 +68,9 @@
     if (this.stopTime) {
       return this.stopTime - this.startTime
     }
-    return +(new Date()) - (this.startTime || new Date())
+
+    var date = +(new Date())
+    return date - (this.startTime || date)
   }
 
   const _displayValueTimer = function() {
