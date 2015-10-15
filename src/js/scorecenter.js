@@ -11,6 +11,27 @@
     return optionsObject
   }
 
+  const forEach = function(array, iterator, context) {
+    for (let i = 0; i < array.length; i++) {
+      iterator.call(context, array[i])
+    }
+  }
+
+  const map = function(array, iterator, context) {
+    let out = []
+    for (let i = 0; i < array.length; i++) {
+      out.push(iterator.call(context, array[i]))
+    }
+    return out
+  }
+
+  const reduce = function(array, iterator, memory, context) {
+    for (let i = 0; i < array.length; i++) {
+      memory = iterator.call(context, memory, array[i])
+    }
+    return memory
+  }
+
   const _increment = function(optionalValue) {
     if (optionalValue === undefined) {
       this.count += 1
@@ -107,7 +128,7 @@
     let $displayContainer = $("<div class='scorecenter js-scorecenter'>")
     $(opts.selector).append($displayContainer)
 
-    return opts.displays.map(function(display){
+    return map(opts.displays, function(display){
       let $display = $("<div class='scorecenter-display'>")
       $displayContainer.append($display)
 
@@ -152,8 +173,8 @@
       refresh: false
     })
 
-    opts.metrics = opts.metrics.map(initializeMetric)
-    opts.metricMap = opts.metrics.reduce(function(mem, metric){
+    opts.metrics = map(opts.metrics, initializeMetric)
+    opts.metricMap = reduce(opts.metrics, function(mem, metric){
       mem[metric.name] = metric
       return mem
     }, {})
@@ -171,7 +192,7 @@
       },
 
       refresh: function() {
-        displays.forEach(function(display){
+        forEach(displays, function(display){
           display.refresh()
         })
       },
