@@ -3,7 +3,7 @@ var babel = require("gulp-babel")
 var babelCompiler = require("babel/register")
 var mocha = require("gulp-mocha")
 var gutil = require("gulp-util")
-var sass = require("gulp-sass")
+var uglify = require("gulp-uglify")
 
 gulp.task("babel", function () {
   return gulp.src("src/js/*.js")
@@ -11,10 +11,10 @@ gulp.task("babel", function () {
     .pipe(gulp.dest("dist/js"))
 })
 
-gulp.task("sass", function(){
-  gulp.src('src/css/*.scss')
-    .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.dest('dist/css'));
+gulp.task("uglify", ["babel"], function (){
+  return gulp.src("dist/js/*.js")
+    .pipe(uglify())
+    .pipe(gulp.dest("dist/js"))
 })
 
 gulp.task("mocha", function () {
@@ -28,7 +28,7 @@ gulp.task("mocha", function () {
     .on('error', gutil.log);
 })
 
-gulp.task("default", ["mocha", "babel", "sass"])
+gulp.task("default", ["mocha", "uglify"])
 
 gulp.task("watch", function (){
   gulp.watch(["src/**", "test/**"], ["default"]);

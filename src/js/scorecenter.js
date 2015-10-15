@@ -13,17 +13,17 @@
 
   const _increment = function(optionalValue) {
     if (optionalValue === undefined) {
-      this.value += 1
-      return this.value
+      this.count += 1
+      return this.count
     }
 
-    this.value += optionalValue
-    return this.value
+    this.count += optionalValue
+    return this.count
   }
 
   const _set = function(value) {
-    this.value = value
-    return this.value
+    this.count = value
+    return this.count
   }
 
   const _start = function() {
@@ -64,7 +64,7 @@
     this.startTime = +(new Date()) - time
   }
 
-  const _time = function() {
+  const _displayValueTimer = function() {
     if (this.stopTime) {
       return this.stopTime - this.startTime
     }
@@ -73,12 +73,8 @@
     return date - (this.startTime || date)
   }
 
-  const _displayValueTimer = function() {
-    return this.time()
-  }
-
   const _displayValueCounter = function() {
-    return this.value
+    return this.count
   }
 
   const initializeMetric = function(metric) {
@@ -93,15 +89,14 @@
         metricObject.stop = _stop.bind(metricObject)
         metricObject.reset = _reset.bind(metricObject)
         metricObject.set = _setTimer.bind(metricObject)
-        metricObject.time = _time.bind(metricObject)
-        metricObject.displayValue = _displayValueTimer.bind(metricObject)
+        metricObject.value = _displayValueTimer.bind(metricObject)
         return metricObject
 
       case "counter":
-        metricObject.value = (metric.value || 0)
+        metricObject.count = (metric.count || 0)
         metricObject.increment = _increment.bind(metricObject)
         metricObject.set = _set.bind(metricObject)
-        metricObject.displayValue = _displayValueCounter.bind(metricObject)
+        metricObject.value = _displayValueCounter.bind(metricObject)
         return metricObject
     }
 
@@ -128,7 +123,7 @@
 
         value: display.value || (function(metricMap) {
           if (display.metric && metricMap[display.metric]) {
-            return metricMap[display.metric].displayValue()
+            return metricMap[display.metric].value()
           }
 
           return 0
@@ -179,7 +174,21 @@
         displays.forEach(function(display){
           display.refresh()
         })
-      }
+      },
+
+      interval: function(interval) {
+        if (opts.refresh) {
+          opts.refresh = interval
+          return
+        }
+        
+        opts.refresh = interval
+        checkTimeout()
+      },
+
+      stop: function() {
+        opts.refresh = false
+      },
 
     }
 
